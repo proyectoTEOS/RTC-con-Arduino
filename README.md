@@ -1,2 +1,59 @@
-# RTC-con-Arduino
-Obtendremos la fecha y hora con el modulo RTC y Arduino
+# RTC con Arduino
+Obtendremos la fecha y hora con el modulo RTC y Arduino.
+
+### Requisitos
+- Tener el IDE de [Arduino](https://www.arduino.cc/en/Main/Software) (o el de tu preferencia) con la versión más actual. 
+- Contar con la librería [RTC](https://github.com/adafruit/RTClib/) 
+- Tener el material para hacer el proyecto.
+
+### Código
+**[Aqui](https://github.com/proyectoTEOS/RTC-con-Arduino/blob/master/RTC-con-Arduino.ino)** podrás obtener el link del código, también dejaremos
+una vista previa aquí abajo.
+
+```c++
+/*
+  Created by TEOS
+  Domotic with Arduino https://goo.gl/btZpjs
+  YouTube https://goo.gl/k7TUSZ
+  Instagram https://goo.gl/zEIjia
+  Facebook https://goo.gl/eivraR
+  Twitter https://goo.gl/du5Wgn
+  Github https://goo.gl/Xl5IiS
+  WEB https://www.proyecto-teos.com
+*/
+
+#include "RTClib.h" //https://github.com/adafruit/RTClib/
+#include <Wire.h>
+
+String resultSerialT;
+RTC_DS3231 RTCModuleT;
+
+void setup() {
+  Serial.begin(9600);
+  delay(1000);
+
+  if (!RTCModuleT.begin()) {
+    Serial.println(F("No es posible iniciar el modulo RTC"));
+    while (1);
+  }
+
+  if (RTCModuleT.lostPower())
+    RTCModuleT.adjust(DateTime(F(__DATE__), F(__TIME__)));
+}
+
+void loop() {
+  DateTime now = RTCModuleT.now();
+  getDateT(now);
+  delay(1000);
+}
+
+void getDateT(DateTime date) {
+  resultSerialT = String(date.hour(), DEC) + ":" + String(date.minute(), DEC) + ":" + String(date.second(), DEC) + " | ";
+  resultSerialT += String(date.day(), DEC) + "/" + String(date.month(), DEC) + "/" + String(date.year(), DEC);
+  Serial.println(resultSerialT);
+}
+```
+
+### Diagrama
+El siguiente esquemático muestra como se debe conectar todos los componentes con la placa.
+![](https://github.com/proyectoTEOS/RTC-con-Arduino/blob/master/rtc-con-arduino-5.jpg)
